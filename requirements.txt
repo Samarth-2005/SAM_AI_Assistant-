@@ -1,0 +1,13 @@
+opencv-python
+numpy
+insightface
+onnxruntime
+joblib
+Pillow
+SpeechRecognition
+PyAudio
+psutil
+requests
+pywin32; sys_platform == 'win32'
+pycaw; sys_platform == 'win32'
+screen-brightness-control

@@ -1,0 +1,66 @@
+SAM AI — desktop edition
+
+1. Keep a backup of your existing assistant project.
+2. Extract this ZIP into a new folder named SAM_AI_Desktop.
+3. Copy your OWN database folder from the old assistant into this new folder.
+   Required file: database/face_profile.pkl. Do not download another person's
+   profile. The pickle format must only be loaded from a trusted source.
+4. Open the new folder in VS Code. Select the same Python interpreter/virtual
+   environment that runs your old assistant. This reuses working InsightFace.
+5. In the VS Code terminal run:
+      python -m pip install -r requirements.txt
+      python main.py
+   If InsightFace installation fails, select your OLD working environment first.
+   Initial InsightFace use may download model files. Model: buffalo_l, CPU.
+6. Look at your camera. After verification, say:
+      Hey SAM, open notepad
+      Hey SAM, how is my system
+   You can also type commands, with no wake word required.
+7. Once tested, click Startup settings > Yes. Keep this project and its Python
+   environment in their current locations. No means remove the startup shortcut.
+
+Design preview only (no camera, mic or desktop actions): python main.py --preview
+
+Controls
+- Microphone off: disables listening; an active capture finishes before release.
+  An in-flight recording is discarded when muted. Previously submitted audio
+  cannot be recalled from the transcription service.
+- Stop & lock: terminates the worker, releases camera/mic and requires face
+  verification again. Already completed actions cannot be undone. Closing the
+  window exits the assistant. Minimize it to keep listening.
+- Typed commands and voice commands are disabled before successful face check.
+- Confirmation dialogs expire after 60 seconds. Deletion has its own dialog.
+- Existing restart/shutdown commands also require the original second command,
+  e.g. type 'yes' within 10 seconds, in addition to the desktop confirmation.
+
+AI and connectivity
+- Your existing Ollama integration uses localhost:11434 and model llama3.2.
+  Run your installed Ollama and ensure that model is available for AI answers.
+  Supported fixed commands do not require Ollama.
+- Voice transcription uses Google's online speech recognition service and
+  sends captured speech there, including audio captured before wake-word matching.
+  The wake word is software matching, not an offline wake-word model.
+- Face matching runs locally. Webcam matching has NO liveness protection and
+  can be fooled by a photo. It is a convenience gate, not Windows Hello or a
+  replacement for your Windows password. Threshold 0.6 and 3 consecutive
+  matching frames are defaults, not a measured security guarantee.
+- This starts after Windows sign-in; it does not unlock Windows, power on the
+  laptop, or guarantee automatic relocking on sleep/resume. Lock the assistant
+  before leaving your laptop unattended.
+
+What changed
+- Added animated Tkinter desktop UI, camera preview, conversation panel,
+  typed commands, mic toggle, lock/stop, error display and startup shortcut setup.
+- Uses your existing action modules. Fixed broad 'open' and YouTube matching
+  that intercepted more specific commands. Existing action coverage is retained;
+  this is not an unrestricted computer-control agent.
+- Added CPU-only bounded face verification with profile normalization.
+- Replaced the broken wake-word loop in the desktop path with bounded capture
+  and exact 'Sam'/'Hey Sam' matching. Unused legacy entry points are excluded from this package.
+- Added missing dependencies used by the current modules.
+
+Testing limitations
+Python syntax and isolated worker/control checks are run in the build
+workspace. Actual Windows actions, SAPI voice, webcam matching, microphone,
+Ollama and startup must be tested on your own Windows laptop. This package
+contains no face data, API keys or Python environment.
